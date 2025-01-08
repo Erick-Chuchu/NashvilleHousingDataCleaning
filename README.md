@@ -32,13 +32,13 @@ Ensure that you have the following installed:
 
 Run the following SQL commands to clean and preprocess the data:
 
-1. **Date-Time Format Cleanup**:
+**i. Date-Time Format Cleanup**:
    - `SaleDate` is converted to store only the date without time:
    ```SQL
        UPDATE NashvilleHousing
        SET SaleDate = CONVERT(Date, SaleDate);
-   
-2. **Handle NULL Values in `PropertyAddress`**:
+
+**ii. Handle NULL Values in `PropertyAddress`**:
 -This script fills in NULL values in the `PropertyAddress` field using values from other rows with the same `ParcelID`:
  ```SQL
     UPDATE a
@@ -49,7 +49,7 @@ Run the following SQL commands to clean and preprocess the data:
     AND a.UniqueID <> b.UniqueID
     WHERE a.PropertyAddress IS NULL;
 
-3. **Splitting Address Columns**:
+**iii. Splitting Address Columns**:
 The `PropertyAddress` and `OwnerAddress` columns are split into separate columns like `Address`, `City`, and `State`:
 
 ```SQL
@@ -59,7 +59,7 @@ The `PropertyAddress` and `OwnerAddress` columns are split into separate columns
     UPDATE NashvilleHousing
     SET PropertySplitAddress = SUBSTRING(PropertyAddress, 1, CHARINDEX(',', PropertyAddress) - 1);
 
-4. **Data Transformation**:
+**iv. Data Transformation**:
 -The `SoldAsVacant` column is updated to replace 'Y' with 'Yes' and 'N' with 'No':
 ```SQL
     UPDATE NashvilleHousing
@@ -69,7 +69,7 @@ The `PropertyAddress` and `OwnerAddress` columns are split into separate columns
     ELSE SoldAsVacant
     END;
 
-5. **Removing Duplicate Records**:
+**v. Removing Duplicate Records**:
 -Duplicates are identified and removed from the table based on key columns such as `ParcelID`, `PropertyAddress`, `SalePrice`, and `SaleDate`:
 ```SQL
     WITH RowNumberCTE AS (
@@ -79,7 +79,7 @@ The `PropertyAddress` and `OwnerAddress` columns are split into separate columns
     FROM NashvilleHousing)
     DELETE FROM RowNumberCTE WHERE RowNumber > 1;
 
-6. **Delete Unused Columns**:
+**vi. Delete Unused Columns**:
 -Unused columns like `PropertyAddress`, `OwnerAddress`, and `TaxDistrict` are removed to streamline the dataset:
 ```SQL
     ALTER TABLE NashvilleHousing
@@ -109,7 +109,6 @@ To contribute:
     Open a pull request.
     If you find any issues, please open an issue in the GitHub repository.
 
-## Authors
+## Author
 
 Erick Chuchu Owino
-AlexTheAnalyst
